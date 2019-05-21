@@ -34,7 +34,7 @@ namespace BlockstreamEsplorerAPI
     {
         public static APITarget APITarget = APITarget.bitcoin;
         
-        private static object CallAPI(string api, string postData = null)
+        private static object CallAPI(string api, Type returnType, string postData = null)
         {
             string apiUrl = "https://blockstream.info/";
 
@@ -75,7 +75,15 @@ namespace BlockstreamEsplorerAPI
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return r;
+                    //JsonConvert.DeserializeObject sometimes tries to cast a string to a numeric so we need to work around this.
+                    if (typeof(string) == returnType)
+                    {
+                        return r;
+                    }
+                    else
+                    {
+                        return JsonConvert.DeserializeObject(r, returnType);
+                    }
                 }
                 else
                 {
@@ -91,41 +99,31 @@ namespace BlockstreamEsplorerAPI
         //GET /block/:hash
         public static Block Block (string blockHash)
         {
-            string result = CallAPI("block/" + blockHash).ToString();
-            Block r = JsonConvert.DeserializeObject<Block>(result);
-            return r;
+            return (Block)CallAPI("block/" + blockHash, typeof(Block));
         }
 
         //GET /block/:hash/status
-        //TODO [ ] - could pass object type into CallAPI and let that handle deserialize - and null if string needed or custom filling
         public static BlockStatus Block_Status (string blockHash)
         {
-            string result = CallAPI("block/" + blockHash + "/status").ToString();
-            BlockStatus r = JsonConvert.DeserializeObject<BlockStatus>(result);
-            return r;
+            return (BlockStatus)CallAPI("block/" + blockHash + "/status",typeof(BlockStatus));
         }
 
         //GET /block/:hash/txs[/:start_index]
         public static IList<Transaction> Block_Txs(string blockHash, long startIndex = 0)
         {
-            string result = CallAPI("block/" + blockHash + "/txs/" + startIndex.ToString()).ToString();
-            IList<Transaction> r = JsonConvert.DeserializeObject<IList<Transaction>>(result);
-            return r;
+            return (IList<Transaction>)CallAPI("block/" + blockHash + "/txs/" + startIndex.ToString(), typeof(IList<Transaction>));
         }
 
         //GET /block/:hash/txids
         public static IList<string> Block_TxIds(string blockHash)
         {
-            string result = CallAPI("block/" + blockHash + "/txids").ToString();
-            IList<string> r = JsonConvert.DeserializeObject<IList<string>>(result);
-            return r;
+            return (IList<string>)CallAPI("block/" + blockHash + "/txids", typeof(IList<string>));
         }
 
         //GET /block-height/:height
         public static string Block_Height(long blockHeight)
         {
-            string result = CallAPI("block-height/" + blockHeight.ToString()).ToString();
-            return result;
+            return (string)CallAPI("block-height/" + blockHeight.ToString(), typeof(string));
         }
 
         //GET /blocks[/:start_height]
@@ -133,23 +131,19 @@ namespace BlockstreamEsplorerAPI
         {
             string apiPath = "blocks";
             if (null != startHeight) {apiPath += "/" + startHeight.ToString();}
-            string result = CallAPI(apiPath).ToString();
-            IList<Block> r = JsonConvert.DeserializeObject<IList<Block>>(result);
-            return r;
+            return (IList<Block>)CallAPI(apiPath, typeof(IList<Block>));
         }
 
         //GET /blocks/tip/height
         public static long Blocks_Tip_Height()
         {
-            string result = CallAPI("blocks/tip/height").ToString();
-            return long.Parse(result);
+            return (long)CallAPI("blocks/tip/height", typeof(long));
         }   
 
         //GET /blocks/tip/hash
         public static string Blocks_Tip_Hash()
         {
-            string result = CallAPI("blocks/tip/hash").ToString();
-            return result;
+            return (string)CallAPI("blocks/tip/hash", typeof(string));
         }  
 
 
@@ -159,24 +153,19 @@ namespace BlockstreamEsplorerAPI
         //GET /tx/:txid
         public static Transaction Transaction(string txid)
         {
-            string result = CallAPI("tx/" + txid).ToString();
-            Transaction r = JsonConvert.DeserializeObject<Transaction>(result);
-            return r;
+            return (Transaction)CallAPI("tx/" + txid, typeof(Transaction));
         }
 
         //GET /tx/:txid/status
         public static Status Transaction_Status(string txid)
         {
-            string result = CallAPI("tx/" + txid + "/status").ToString();
-            Status r = JsonConvert.DeserializeObject<Status>(result);
-            return r;
+            return (Status)CallAPI("tx/" + txid + "/status", typeof(Status));
         }
 
         //GET /tx/:txid/hex
         public static string Transaction_Hex(string txid)
         {
-            string result = CallAPI("tx/" + txid + "/hex").ToString();
-            return result;
+            return (string)CallAPI("tx/" + txid + "/hex", typeof(string));
         }  
 
         //GET /tx/:txid/merkle-proof
@@ -184,32 +173,25 @@ namespace BlockstreamEsplorerAPI
         // - "Will eventually be changed to use bitcoind's merkleblock format".
         public static MerkleProof Transaction_Merkle_Proof(string txid)
         {
-            string result = CallAPI("tx/" + txid + "/merkle-proof").ToString();
-            MerkleProof r = JsonConvert.DeserializeObject<MerkleProof>(result);
-            return r;
+            return (MerkleProof)CallAPI("tx/" + txid + "/merkle-proof", typeof(MerkleProof));
         }
 
         //GET /tx/:txid/outspend/:vout
         public static Outspend Transaction_Outspend(string txid, long vout)
         {
-            string result = CallAPI("tx/" + txid + "/outspend/" + vout.ToString()).ToString();
-            Outspend r = JsonConvert.DeserializeObject<Outspend>(result);
-            return r;
+            return (Outspend)CallAPI("tx/" + txid + "/outspend/" + vout.ToString(), typeof(Outspend));
         }
 
         //GET /tx/:txid/outspends
         public static IList<Outspend> Transaction_Outspends(string txid)
         {
-            string result = CallAPI("tx/" + txid + "/outspends").ToString();
-            IList<Outspend> r = JsonConvert.DeserializeObject<IList<Outspend>>(result);
-            return r;
+            return (IList<Outspend>)CallAPI("tx/" + txid + "/outspends",typeof(IList<Outspend>));
         }
 
         //POST /tx
         public static string Post_Transaction(string rawTxHex)
         {
-            string result = CallAPI("/tx", rawTxHex).ToString();
-            return result;
+            return (string)CallAPI("/tx", typeof(string), rawTxHex);
         }
         
 
@@ -219,33 +201,25 @@ namespace BlockstreamEsplorerAPI
         //GET /address/:address
         public static Address Address(string address)
         {
-            string result = CallAPI("address/" + address).ToString();
-            Address r = JsonConvert.DeserializeObject<Address>(result);
-            return r;
+            return (Address)CallAPI("address/" + address, typeof(Address));
         }
 
         //GET /scripthash/:hash
         public static ScriptHash Scripthash(string scriptHash)
         {
-            string result = CallAPI("scripthash/" + scriptHash).ToString();
-            ScriptHash r = JsonConvert.DeserializeObject<ScriptHash>(result);
-            return r;
+            return (ScriptHash)CallAPI("scripthash/" + scriptHash, typeof(ScriptHash));
         }
 
         //GET /address/:address/txs
         public static IList<Transaction> Address_Txs(string address)
         {
-            string result = CallAPI("address/" + address + "/txs").ToString();
-            IList<Transaction> r = JsonConvert.DeserializeObject<IList<Transaction>>(result);
-            return r;
+            return (IList<Transaction>)CallAPI("address/" + address + "/txs", typeof(IList<Transaction>));
         }
 
         //GET /scripthash/:hash/txs
         public static IList<Transaction> Scripthash_Txs(string scriptHash)
         {
-            string result = CallAPI("scripthash/" + scriptHash + "/txs").ToString();
-            IList<Transaction> r = JsonConvert.DeserializeObject<IList<Transaction>>(result);
-            return r;
+            return (IList<Transaction>)CallAPI("scripthash/" + scriptHash + "/txs", typeof(IList<Transaction>));
         }
 
         //GET /address/:address/txs/chain[/:last_seen_txid]
@@ -253,9 +227,7 @@ namespace BlockstreamEsplorerAPI
         {
             string apiPath = "address/" + address + "/txs/chain";
             if (null != lastSeenTxid) {apiPath += "/" + lastSeenTxid;}
-            string result = CallAPI(apiPath).ToString();
-            IList<Transaction> r = JsonConvert.DeserializeObject<IList<Transaction>>(result);
-            return r;
+            return (IList<Transaction>)CallAPI(apiPath, typeof(IList<Transaction>));
         }
 
         //GET /scripthash/:hash/txs/chain[/:last_seen_txid]
@@ -263,41 +235,31 @@ namespace BlockstreamEsplorerAPI
         {
             string apiPath = "scripthash/" + scriptHash + "/txs/chain";
             if (null != lastSeenTxid) {apiPath += "/" + lastSeenTxid;}
-            string result = CallAPI(apiPath).ToString();
-            IList<Transaction> r = JsonConvert.DeserializeObject<IList<Transaction>>(result);
-            return r;
+            return (IList<Transaction>)CallAPI(apiPath, typeof(IList<Transaction>));
         }
 
         //GET /address/:address/txs/mempool
         public static IList<Transaction> Address_Txs_Mempool(string address)
         {
-            string result = CallAPI("address/" + address + "/txs/mempool").ToString();
-            IList<Transaction> r = JsonConvert.DeserializeObject<IList<Transaction>>(result);
-            return r;
+            return (IList<Transaction>)CallAPI("address/" + address + "/txs/mempool", typeof(IList<Transaction>));
         }
 
         //GET /scripthash/:hash/txs/mempool
         public static IList<Transaction> Scripthash_Txs_Mempool(string scriptHash)
         {
-            string result = CallAPI("scripthash/" + scriptHash + "/txs/mempool").ToString();
-            IList<Transaction> r = JsonConvert.DeserializeObject<IList<Transaction>>(result);
-            return r;
+            return (IList<Transaction>)CallAPI("scripthash/" + scriptHash + "/txs/mempool", typeof(IList<Transaction>));
         }
 
         //GET /address/:address/utxo
         public static IList<Utxo> Address_Utxo(string address)
         {
-            string result = CallAPI("address/" + address + "/utxo").ToString();
-            IList<Utxo> r = JsonConvert.DeserializeObject<IList<Utxo>>(result);
-            return r;
+            return (IList<Utxo>)CallAPI("address/" + address + "/utxo", typeof(IList<Utxo>));
         }
 
         //GET /scripthash/:hash/utxo
         public static IList<Utxo> Scripthash_Utxo(string scriptHash)
         {
-            string result = CallAPI("scripthash/" + scriptHash + "/utxo").ToString();
-            IList<Utxo> r = JsonConvert.DeserializeObject<IList<Utxo>>(result);
-            return r;
+            return (IList<Utxo>)CallAPI("scripthash/" + scriptHash + "/utxo", typeof(IList<Utxo>));
         }
 
 
@@ -307,25 +269,19 @@ namespace BlockstreamEsplorerAPI
         //GET /mempool
         public static Mempool Mempool()
         {
-            string result = CallAPI("mempool").ToString();
-            Mempool r = JsonConvert.DeserializeObject<Mempool>(result);
-            return r;
+            return (Mempool)CallAPI("mempool", typeof(Mempool));
         }
 
         //GET /mempool/txids
         public static IList<string> Mempool_TxIds()
         {
-            string result = CallAPI("mempool/txids").ToString();
-            IList<string> r = JsonConvert.DeserializeObject<IList<string>>(result);
-            return r;
+            return (IList<string>)CallAPI("mempool/txids", typeof(IList<string>));
         }
 
         //GET /mempool/recent
         public static IList<RecentTransaction> Mempool_Recent()
         {
-            string result = CallAPI("mempool/recent").ToString();
-            IList<RecentTransaction> r = JsonConvert.DeserializeObject<IList<RecentTransaction>>(result);
-            return r;
+            return (IList<RecentTransaction>)CallAPI("mempool/recent", typeof(IList<RecentTransaction>));
         }
         
 
@@ -335,7 +291,8 @@ namespace BlockstreamEsplorerAPI
         //GET /fee-estimates
         public static IList<FeeEstimate> Fee_Estimates()
         {
-            string result = CallAPI("fee-estimates").ToString();
+            string result = (string)CallAPI("fee-estimates", typeof(string));
+
             var resultObject = JObject.Parse(result);
 
             IList<FeeEstimate> feeEstimates = new List<FeeEstimate>();

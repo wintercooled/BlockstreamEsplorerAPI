@@ -87,7 +87,7 @@ namespace BlockstreamEsplorerAPI
                 IList<Outspend> outspends = Esplorer.Transaction_Outspends(txid);
 
                 //POST: https://blockstream.info/api/tx/your-raw-tx-hex-here
-                //string postTxId = Esplorer.Post_Transaction("your-raw-tx-hex-here"); 
+                //string postTxId = Esplorer.Post_Transaction(null, "your-raw-tx-hex-here"); 
 
                 
                 // ADDRESSES
@@ -154,7 +154,7 @@ namespace BlockstreamEsplorerAPI
             }
             catch (Exception e)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
+               Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(e.Message);
                 Console.ResetColor();
             }

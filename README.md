@@ -1,11 +1,36 @@
 # BlockstreamEsplorerAPI
 
-## A C# .NET Core wrapper for the [Blockstream Esplorer](https://github.com/Blockstream/esplora) API. Allows you to call Esplorer's [Bitcoin](https://github.com/bitcoin/bitcoin) (main and testnet) and [Liquid](https://blockstream.com/liquid/) API from within your project.
+## A C# .NET Core wrapper for the [Blockstream Esplorer](https://github.com/Blockstream/esplora) API with full API coverage. Allows you to call Esplorer's [Bitcoin](https://github.com/bitcoin/bitcoin) (main and testnet) and [Liquid](https://blockstream.com/liquid/) API from within your project.
 
 ## Runs on Linux, Windows and Mac OS.
 
 ## An example of how to use the BlockstreamEsplorerAPI class within a .NET Core app can be found in Program.cs.
 
+Easy to use:
+
+~~~~
+//Bitcoin
+Esplorer.APITarget = APITarget.bitcoin;
+
+long testBlock = Esplorer.Blocks_Tip_Height(); 
+string blockHash = Esplorer.Block_Height(testBlock);
+
+Block block = Esplorer.Block(blockHash);
+Console.WriteLine(block.height);
+~~~~
+
+~~~~
+//Liquid
+Esplorer.APITarget = APITarget.liquid;
+
+long testBlock = Esplorer.Blocks_Tip_Height(); 
+string blockHash = Esplorer.Block_Height(testBlock);
+
+Block block = Esplorer.Block(blockHash);
+//Liquid specific field:
+Proof proof = block.proof;
+Console.WriteLine(proof.challenge);
+~~~~
 
 Examples of the Esplorer API:
 

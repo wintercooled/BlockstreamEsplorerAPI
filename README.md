@@ -27,6 +27,7 @@ long testBlock = Esplorer.Blocks_Tip_Height();
 string blockHash = Esplorer.Block_Height(testBlock);
 
 Block block = Esplorer.Block(blockHash);
+
 //Liquid specific field:
 Proof proof = block.proof;
 Console.WriteLine(proof.challenge);

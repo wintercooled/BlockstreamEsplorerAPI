@@ -2,6 +2,8 @@
 
 ## A C# .NET Core wrapper for the [Blockstream Esplorer](https://github.com/Blockstream/esplora) API with full API coverage. Allows you to call Esplorer's [Bitcoin](https://github.com/bitcoin/bitcoin) (main and testnet) and [Liquid](https://blockstream.com/liquid/) API from within your project.
 
+If you want to actually use C# to issue commands to a Bitcoin or Elements/Liquid node itself (e.g. to create transactions, check wallet balance, issue assets etc) then check out the [dotnetcoreDynamicJSON-RPC](https://github.com/wintercooled/dotnetcoreDynamicJSON-RPC) code instead. As that uses dynamic types to send RPC commands, the code is brief and you can call whatever is listed here: https://en.bitcoin.it/wiki/Original_Bitcoin_client/API_calls_list#Full_list, and also the extra RPC calls used by Elements/Liquid, with little effort.
+
 ## Runs on Linux, Windows and Mac OS.
 
 ## An example of how to use the BlockstreamEsplorerAPI class within a .NET Core app can be found in Program.cs.

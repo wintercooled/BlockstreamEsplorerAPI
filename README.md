@@ -6,7 +6,7 @@
 
 ## An example of how to use the BlockstreamEsplorerAPI class within a .NET Core app can be found in Program.cs.
 
-Note: If you want to actually use C# to issue commands to a Bitcoin or Elements/Liquid node itself (e.g. to create transactions, check wallet balance, issue assets etc) then check out the [dotnetcoreDynamicJSON-RPC](https://github.com/wintercooled/dotnetcoreDynamicJSON-RPC) code instead. That uses dynamic types to send RPC commands, meaning the code is brief and you can call whatever is listed here: https://en.bitcoin.it/wiki/Original_Bitcoin_client/API_calls_list#Full_list, and also the extra RPC calls used by Elements/Liquid, with little effort.
+Note: If you want to actually use C# to issue commands to a Bitcoin or Elements/Liquid node itself (e.g. to create transactions, check wallet balance, issue assets etc) then check out the [dotnetcoreDynamicJSON-RPC](https://github.com/wintercooled/dotnetcoreDynamicJSON-RPC) code instead. That uses dynamic types to send RPC commands, meaning the code is brief and you can call whatever is listed here: https://bitcoin.org/en/developer-reference#bitcoin-core-apis, the extra RPC calls used by Elements/Liquid, and any future RPC commands, with little effort and no need to change the code within dotnetcoreDynamicJSON-RPC in the future.
 
 #### Easy to use:
 

@@ -1,6 +1,6 @@
 # BlockstreamEsplorerAPI
 
-## A C# .NET Core wrapper for the [Blockstream Esplorer](https://github.com/Blockstream/esplora) API with full API coverage. Allows you to call Esplorer's [Bitcoin](https://github.com/bitcoin/bitcoin) (main and testnet) and [Liquid](https://blockstream.com/liquid/) API from within your project.
+## A C# .NET Core wrapper for the [Blockstream Esplorer](https://github.com/Blockstream/esplora) API with full API coverage. Allows you to call the block Explorer's [Bitcoin](https://github.com/bitcoin/bitcoin) (main and testnet) and [Liquid](https://blockstream.com/liquid/) API from within your project.
 
 ## Runs on Linux, Windows and Mac OS.
 

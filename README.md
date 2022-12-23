@@ -1,4 +1,4 @@
-# BlockstreamEsplorerAPI
+# Good luck getting this working after any .NET updates - I've adandoned .NET/MVC for Python/Flask now.
 
 ## A C# .NET Core wrapper for the [Blockstream Esplorer](https://github.com/Blockstream/esplora) API with full API coverage. Allows you to call the block Explorer's [Bitcoin](https://github.com/bitcoin/bitcoin) (main and testnet) and [Liquid](https://blockstream.com/liquid/) API from within your project.
 
